@@ -1,0 +1,3 @@
+from ipmap import ipmap
+
+print('Chargement template reussi')

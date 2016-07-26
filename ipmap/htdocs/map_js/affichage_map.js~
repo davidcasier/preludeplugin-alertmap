@@ -1,0 +1,38 @@
+
+jQuery.noConflict();
+jQuery(function(){
+	var $ = jQuery;
+
+	$('#focus-single').click(function(){
+		$('#map1').vectorMap('set', 'focus', {region: 'AU', animate: true});
+	    });
+	$('#focus-multiple').click(function(){
+		$('#map1').vectorMap('set', 'focus', {regions: ['AU', 'JP'], animate: true});
+	    });
+	$('#focus-coords').click(function(){
+		$('#map1').vectorMap('set', 'focus', {scale: 7, lat: 35, lng: 33, animate: true});
+	    });
+	$('#focus-init').click(function(){
+		$('#map1').vectorMap('set', 'focus', {scale: 1, x: 0.5, y: 0.5, animate: true});
+	    });
+	$('#map1').vectorMap({
+		map: 'world_mill_en',
+		    panOnDrag: true,
+		    focusOn: {
+		    x: 0.5,
+			y: 0.5,
+			scale: 1,
+			animate: true
+			},
+		    markerStyle: {
+		    initial: {
+			fill: '#F8E23B',
+			    stroke: '#383f47'
+			    }
+		},
+		    backgroundColor: '#383f47'
+		   
+		
+		   
+		    });
+    })

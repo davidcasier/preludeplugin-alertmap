@@ -1,0 +1,117 @@
+#filter CleanOutput
+
+#import fetch_alert
+
+<head>
+	<link rel="stylesheet" type="text/css" href="ipmap/css/displayMap.css">
+	<link rel="stylesheet" href="ipmap/js/jquery-jvectormap.css" type="text/css" media="screen"/>
+
+	#set $alert_list =[]
+	#set $country_list = []
+	#set $country_name_list = []
+	#set $alert_list = $fetch_alert.query_alert($alert_list)
+	#set $country_list = $fetch_alert.country_list($alert_list)
+	#set $country_name_list = $fetch_alert.country_name_list($alert_list)
+	#set $i = $len($alert_list)
+	#set $m = $len($country_list)
+	#set $n = 0
+	#set $j = 0
+
+     <div id = "marker_list" style = "display : none;">   
+     	  #while $j < $i
+	  #if $alert_list[$j][3]
+$alert_list[$j][3], $alert_list[$j][4]?$alert_list[$j][1]!
+	  #end if
+	  #set $j = $j + 1
+	  #end while
+     </div>
+
+     #set $j = 0
+
+     <div id = "country_list" style = "display : none;">   
+$country_list
+     </div>
+     <script type="text/javascript">
+     	     \$LAB.script("ipmap/map_js/tests/assets/jquery-1.8.2.js")
+	     .script("ipmap/map_js/jquery-jvectormap.js")
+  	     .script("ipmap/map_js/lib/jquery-mousewheel.js")
+  	     .script("ipmap/map_js/src/jvectormap.js")
+  	     .script("ipmap/map_js/src/abstract-element.js")
+  	     .script("ipmap/map_js/src/abstract-canvas-element.js")
+  	     .script("ipmap/map_js/src/abstract-shape-element.js")
+  	     .script("ipmap/map_js/src/svg-element.js")
+  	     .script("ipmap/map_js/src/svg-group-element.js")
+  	     .script("ipmap/map_js/src/svg-canvas-element.js")
+  	     .script("ipmap/map_js/src/svg-shape-element.js")
+  	     .script("ipmap/map_js/src/svg-path-element.js")
+  	     .script("ipmap/map_js/src/svg-circle-element.js")
+  	     .script("ipmap/map_js/src/svg-image-element.js")
+  	     .script("ipmap/map_js/src/svg-text-element.js")
+  	     .script("ipmap/map_js/src/vml-element.js")
+  	     .script("ipmap/map_js/src/vml-group-element.js")
+  	     .script("ipmap/map_js/src/vml-canvas-element.js")
+  	     .script("ipmap/map_js/src/vml-shape-element.js")
+  	     .script("ipmap/map_js/src/vml-path-element.js")
+  	     .script("ipmap/map_js/src/vml-circle-element.js")
+  	     .script("ipmap/map_js/src/vml-image-element.js")
+  	     .script("ipmap/map_js/src/map-object.js")
+  	     .script("ipmap/map_js/src/region.js")
+  	     .script("ipmap/map_js/src/marker.js")
+  	     .script("ipmap/map_js/src/vector-canvas.js")
+  	     .script("ipmap/map_js/src/simple-scale.js")
+  	     .script("ipmap/map_js/src/ordinal-scale.js")
+  	     .script("ipmap/map_js/src/numeric-scale.js")
+  	     .script("ipmap/map_js/src/color-scale.js")
+  	     .script("ipmap/map_js/src/legend.js")
+  	     .script("ipmap/map_js/src/data-series.js")
+  	     .script("ipmap/map_js/src/proj.js")
+  	     .script("ipmap/map_js/src/map.js")  	
+	     .script("ipmap/map_js/tests/assets/jquery-jvectormap-world-mill-en.js")	
+  	     .script("ipmap/js/affichage_map.js")
+  	     .script("ipmap/js/alert_animation.js").wait(function(){
+	     	jQuery(document).on("ready ajaxSuccess" ,function(){create_ipmap();
+							            create_sortbuttons();});
+								    });
+        </script>
+</head>
+
+
+<body>
+
+	<div class = "row">
+	     <div class = "col-md-8">
+	     	  <fieldset>
+			<div id="map" class = "to_reload" style="width: 825px; height: 550px"></div>
+		  </fieldset>
+
+	     </div>
+
+	     <div class = "col-md-4">
+	     	  <div class ="row">
+		       <div class = "col-md-4 col-tri">
+		       	    <button id="All" class = "tri">All</button>
+			    #while $j < $m
+			    <button id="$country_list[$j]" class = "tri">$country_name_list[$j]</button>
+			    #set $j = $j + 1
+			    #end while
+		       </div>
+		       #set $j = 0
+		       <div class = "col-md-8">
+		       	    <fieldset class = "liste_ip">
+			    	      #while $j < $i
+				      #if $alert_list[$j][3]
+				      <div class = "alert_data $alert_list[$j][2] $alert_list[$j][6]"> 
+				      	   $alert_list[$j][1]</br>
+				      	   Source : $alert_list[$j][0]</br>
+				      	   Location : $alert_list[$j][5]
+				      </div>
+				      #end if
+				      #set $j = $j + 1
+				      #end while
+			   </fieldset>
+		       </div>
+		   </div>
+	       </div>
+	   </div>
+</body>
+#end filter

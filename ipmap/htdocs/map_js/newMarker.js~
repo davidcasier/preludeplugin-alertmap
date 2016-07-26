@@ -1,0 +1,3 @@
+$('#New_Marker').click(function(lat,lng,name){
+        $('#map1').addMarker('',{});
+}
