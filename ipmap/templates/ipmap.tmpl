@@ -1,38 +1,64 @@
 #filter CleanOutput
 
-#import fetch_alert
-
-<head>
 	<link rel="stylesheet" type="text/css" href="ipmap/css/displayMap.css">
 	<link rel="stylesheet" href="ipmap/js/jquery-jvectormap.css" type="text/css" media="screen"/>
 
-	#set $alert_list =[]
-	#set $country_list = []
-	#set $country_name_list = []
-	#set $alert_list = $fetch_alert.query_alert($alert_list)
-	#set $country_list = $fetch_alert.country_list($alert_list)
-	#set $country_name_list = $fetch_alert.country_name_list($alert_list)
-	#set $i = $len($alert_list)
-	#set $m = $len($country_list)
-	#set $n = 0
+	#set $m = $len($country_codes)
 	#set $j = 0
 
      <div id = "marker_list" style = "display : none;">   
-     	  #while $j < $i
-	  #if $alert_list[$j][3]
-$alert_list[$j][3], $alert_list[$j][4]?$alert_list[$j][1]!
+     	  #for $el in $alert_list	
+	  #if $el[3]
+$el[3], $el[4]?$el[1]?$el[7]?$el[0]!
 	  #end if
-	  #set $j = $j + 1
-	  #end while
+	  #end for
      </div>
-
-     #set $j = 0
 
      <div id = "country_list" style = "display : none;">   
-$country_list
+#for $el in $country_codes
+$el,
+#end for
      </div>
-     <script type="text/javascript">
-     	     \$LAB.script("ipmap/map_js/tests/assets/jquery-1.8.2.js")
+   
+
+<div class = "row">
+	     <div class = "col-md-8">
+	     	  <fieldset>
+			<div id="map" class = "to_reload" style="width: 825px; height: 550px"></div>
+		  </fieldset>
+
+	     </div>
+
+	     <div class = "col-md-4">
+	     	  <div class ="row">
+		       <div class = "col-md-4 col-tri">
+		       	    <button id="All" class = "tri">All</button>
+			    #while $j < $m
+			    <button id="$country_codes[$j]" class = "tri">$country_list[$j]</button>
+			    #set $j = $j + 1
+			    #end while
+		       </div>
+		       #set $j = 0
+		       <div class = "col-md-8">
+		       	    <fieldset class = "liste_ip">
+			    	      #for $el in $alert_list
+				      #if $el[3]
+				      <div id = "$j" class = "alert_data $el[2] $el[6]"> 
+				      	   $el[1]</br>
+				      	   Source : $el[0]</br>
+				      	   Location : $el[5]
+				      </div>
+				      #end if
+				      #set $j+=1
+				      #end for
+			   </fieldset>
+		       </div>
+		   </div>
+	       </div>
+	   </div>
+
+<script type="text/javascript">
+     	     \$LAB
 	     .script("ipmap/map_js/jquery-jvectormap.js")
   	     .script("ipmap/map_js/lib/jquery-mousewheel.js")
   	     .script("ipmap/map_js/src/jvectormap.js")
@@ -68,50 +94,17 @@ $country_list
   	     .script("ipmap/map_js/src/map.js")  	
 	     .script("ipmap/map_js/tests/assets/jquery-jvectormap-world-mill-en.js")	
   	     .script("ipmap/js/affichage_map.js")
+	     .script("ipmap/js/getData.js")
   	     .script("ipmap/js/alert_animation.js").wait(function(){
-	     	jQuery(document).on("ready ajaxSuccess" ,function(){create_ipmap();
-							            create_sortbuttons();});
-								    });
-        </script>
-</head>
+	    						    
+           jQuery(document).ready(function(){
+	   create_ipmap();
+	   add_map_data();	
+           create_sortbuttons();
+		});
+	   });
+</script>
 
 
-<body>
 
-	<div class = "row">
-	     <div class = "col-md-8">
-	     	  <fieldset>
-			<div id="map" class = "to_reload" style="width: 825px; height: 550px"></div>
-		  </fieldset>
-
-	     </div>
-
-	     <div class = "col-md-4">
-	     	  <div class ="row">
-		       <div class = "col-md-4 col-tri">
-		       	    <button id="All" class = "tri">All</button>
-			    #while $j < $m
-			    <button id="$country_list[$j]" class = "tri">$country_name_list[$j]</button>
-			    #set $j = $j + 1
-			    #end while
-		       </div>
-		       #set $j = 0
-		       <div class = "col-md-8">
-		       	    <fieldset class = "liste_ip">
-			    	      #while $j < $i
-				      #if $alert_list[$j][3]
-				      <div class = "alert_data $alert_list[$j][2] $alert_list[$j][6]"> 
-				      	   $alert_list[$j][1]</br>
-				      	   Source : $alert_list[$j][0]</br>
-				      	   Location : $alert_list[$j][5]
-				      </div>
-				      #end if
-				      #set $j = $j + 1
-				      #end while
-			   </fieldset>
-		       </div>
-		   </div>
-	       </div>
-	   </div>
-</body>
 #end filter

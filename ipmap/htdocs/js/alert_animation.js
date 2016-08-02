@@ -11,14 +11,17 @@ function create_sortbuttons(){
     var x;
     var mapObj = $('#map').vectorMap('get', 'mapObject');
 
+
     for (x in country_array){
-	document.getElementById(country_array[x]).addEventListener("click", function(event){
-		var i = new String(this.id);
-		event.preventDefault();
-		$("div.alert_data:not("+"."+i+")").hide(1000);
-		$("."+i).show(1000);
-		mapObj.setFocus({region: i, animate: 1});
-	    });
+	if(country_array[x]){
+	    document.getElementById(country_array[x]).addEventListener("click", function(event){
+		    var i = new String(this.id);
+		    event.preventDefault();
+		    $("div.alert_data:not(."+i+")").hide(1000);
+		    $("."+i).show(1000);
+		    mapObj.setFocus({region: i, animate: 1});
+		});
+	}
     }
 
 
