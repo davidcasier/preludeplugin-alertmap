@@ -24,10 +24,9 @@ def geoip_lat_lon(ip):
     return latlon
 
 
-
 def query_alert (alert_list):
-    #print "Debut du Fetch"
     i= len(alert_list)
+    list_ip = []
     results = db.getValues(["alert.source.node.address.address","alert.Classification.text","alert.assessment.impact.severity"], criteria="alert.source.node.address.address != NULL",offset = i)
     for row in results:
         loca = geoip_lat_lon(row[0])
@@ -38,11 +37,46 @@ def query_alert (alert_list):
             lng = loca[1]
             country = loca[2]
             country_code = loca[3]
-        alert_list.append([row[0],row[1],row[2],lat,lng,country,country_code])
-        i = i +1
-    #print "Fin du Fetch"
+            if (lat,lng) not in list_ip:
+                alert_list.append([row[0],[row[1]],row[2],lat,lng,country,country_code,1])
+                list_ip.append((lat,lng))
+            else:
+                for j in alert_list:
+                    if j[3] == lat and j[4] == lng:
+                        j[1].append(row[1])
+                        if (j[2] == 'low' and row[2]!='low') or (j[2] == 'medium' and row[2]=='high'):
+                            j[2] = row[2]
+                        if row[2] == 'medium':
+                            j[7]=j[7]+1
+                        elif row[2] == 'high':
+                            j[7]=j[7]+2
     return alert_list
        
+
+
+def alert_type_list(list_type):
+    nb =[]
+    ret=[]
+    for el in list_type:
+        found=0
+        for i in range(0, len(ret)):
+            if ret[i] == el:
+                nb[i]=nb[i]+1
+                found=1
+        if found == 0:
+            ret.append(el)
+            nb.append(1)
+    str_ret = ret[0]
+    if nb[0]!= 1:
+        str_ret = str_ret+"(x"+str(nb[0])+")"
+    for j in range(1,len(ret)):
+        str_ret = str_ret+", "+ ret[j]
+        if nb[j]!= 1:
+            str_ret = str_ret+"(x"+str(nb[j])+")"
+    return str_ret
+
+
+
 
 def country_list(alert_list):
     ret = []

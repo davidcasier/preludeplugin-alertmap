@@ -30,6 +30,5 @@ class IpMap(view.View):
 
 
     def render(self):
-        print("render execute")
         params = self.parameters
  
