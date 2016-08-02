@@ -1,4 +1,0 @@
-jQuery.noConflict();
-
-var country_list = $("#marker_list").text();
-var country_array = country_list.split(",");
